@@ -1,3 +1,4 @@
+#！/usr/bin/env python3 
 # -*- coding: utf-8 -*-
 
 import pigpio
@@ -5,10 +6,10 @@ import cv2
 import numpy as np
 import imutils
 import time
-import serial
-import RPi.GPIO as GPIO
-import signal
-import atexit
+#import serial
+#import RPi.GPIO as GPIO
+#import signal
+#import atexit
 import gpiozero as gz
 
 
@@ -23,7 +24,7 @@ motor_r = gz.Motor(17,18)
 motor_l = gz.Motor(27,22)
 
 counter = 0
-kp=float(0.5/150)
+#kp=float(0.5/150)
 ball_x=0
 plus1 = 1500
 plus2 = 1200
@@ -131,7 +132,7 @@ while True:
                 stop()
         elif error<0:
             if error1>0:
-                print(error1)                
+#                print(error1)                
                 turn_left(0.9,0.9)
                 error1=error1-45 
             else:
