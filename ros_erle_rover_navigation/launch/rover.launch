@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+   <node pkg="rover" type="rover" name="rover" output="screen" />
+   <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find mrobot_description)/urdf/mrobot_with_rplidar.urdf.xacro'" />
+    <param name="robot_description" command="$(arg urdf_file)" />
+    <!-- 运行激光雷达驱动 -->
+    <include file="$(find ros_erle_rover_navigation)/launch/rplidar.launch" />
+</launch>
