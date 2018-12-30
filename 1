@@ -1,2 +1,93 @@
 https://hollyqood.wordpress.com/2015/12/01/ros-slam-2-hector-slam-2d%E5%9C%B0%E5%9C%96%E5%BB%BA%E7%BD%AE/
 http://docs.erlerobotics.com/erle_robots/erle_rover/examples/include_odometry_with_a_2d_laser#teleoperate-erle-rover
+import sys
+import time
+import os
+import fcntl
+import time
+import tty
+import termios
+import socket
+import RPi.GPIO as GPIO
+import pigpio
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Bind the socket to the address given on the command line
+hosts='192.168.0.106'
+server_address = (hosts, 8888)
+print ('starting up on %s port %s' % server_address)
+sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+sock.bind(server_address)
+sock.listen(1)
+
+
+servopin=23
+pi = pigpio.pi()
+plus=1500
+pi.set_mode(servopin,pigpio.OUTPUT)
+pi.set_PWM_frequency(servopin,50)
+motor_r = gz.Motor(17,18)
+motor_l = gz.Motor(27,22)
+
+def foward(r,l):  
+    motor_r.forward(r)
+    motor_l.forward(l)
+def back(r,l):
+    motor_r.backward(r)
+    motor_l.backward(l)
+def left():
+	if plus>=510 and plus <=2500:
+  	plus = plus-10
+  	if(plus<500):
+			plus=500
+    pi.set_servo_pulsewidth(17,plus)      
+def right():
+	if plus>=510 and plus <=2500:
+  	plus = plus+10
+  	if(plus>2500):
+			plus=2500
+    pi.set_servo_pulsewidth(17,plus)      
+def stop():
+    motor_r.stop()
+    motor_l.stop()
+def stopservo()
+	if(plus1>1500):
+		for z in range(plus1,1500,-10):
+			pi.set_servo_pulsewidth(servopin1,z)
+			time.sleep(0.05)
+	else:
+		for z in range(plus1,1500,10):
+			pi.set_servo_pulsewidth(servopin1,z)
+			time.sleep(0.05)
+     
+while True:
+    print ('waiting for a connection')
+    connection,client_address = sock.accept()
+    print ('client connected:',client_address)
+    sock.setblocking(0)
+    while True:
+        try:
+            c = connection.recv(5).decode()
+            init()
+            if c == 'w':
+                print(repr(c))
+                forward()
+            elif c== 's':
+                print(repr(c))
+                back()
+            elif c == 'a':
+                print(repr(c))
+                left()
+            elif c == 'd':
+                print(repr(c))
+                right()
+            elif c == 'x':
+                print(repr(c))
+                stopservo()
+            else:
+                stop()
+#                break
+        except socket.error:
+            print("nor ready")
+            stop()
+connection.close()
