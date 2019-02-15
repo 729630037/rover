@@ -1,2 +1,0 @@
-You can save it in 2d by running the command:
-rosrun map_server map_saver -f map_name.pgm map:=projected_map
