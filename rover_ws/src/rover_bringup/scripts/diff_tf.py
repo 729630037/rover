@@ -51,8 +51,8 @@ class DiffTf:
         self.x = 0                  # position in xy plane 
         self.y = 0
         self.th = 0
-        self.dx = 0                 # speeds in x/rotation
-        self.dr = 0
+        self.v = 0                 # speeds in v/w
+        self.w = 0
         self.then = rospy.Time.now()
         
         # subscriptions
@@ -95,9 +95,8 @@ class DiffTf:
             # this approximation works (in radians) for small angles
             th = ( d_right - d_left ) / self.base_width
             # calculate velocities
-            self.dx = d / elapsed
-            self.dr = th / elapsed
-           
+            self.v = d / elapsed     #v=(v_right+v_left)/2=(d_right+d_left)/(2*t)
+            self.w = th / elapsed	  #w=(v_right-v_left)/base_width=(d_right-d_left)/(base_width*t)
 
              
             if (d != 0):
@@ -132,9 +131,9 @@ class DiffTf:
             odom.pose.pose.position.z = 0
             odom.pose.pose.orientation = quaternion
             odom.child_frame_id = self.base_frame_id
-            odom.twist.twist.linear.x = self.dx
+            odom.twist.twist.linear.x = self.v
             odom.twist.twist.linear.y = 0
-            odom.twist.twist.angular.z = self.dr
+            odom.twist.twist.angular.z = self.w
             self.odomPub.publish(odom)
             
             
